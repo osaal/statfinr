@@ -13,6 +13,7 @@
 #'
 #' @returns A data frame containing the `id` and `name` of the databases
 #' @export
+#' @importFrom rlang .data
 explore <- function(db = NULL) {
   # TODO: Write unit tests
   address <- "https://statfin.stat.fi/PXWeb/api/v1/fi/StatFin/"
@@ -34,15 +35,15 @@ explore <- function(db = NULL) {
     )
   }
 
-  result <- request(address) |>
-    req_perform() |>
-    resp_body_json() |>
+  result <- httr2::request(address) |>
+    httr2::req_perform() |>
+    httr2::resp_body_json() |>
     Reduce(
       rbind,
       x = _
     ) |>
     data.frame() |>
-    dplyr::select(id, text) |>
+    dplyr::select(.data$id, .data$text) |>
     tibble::remove_rownames()
 
   return(result)
