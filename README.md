@@ -4,6 +4,8 @@
 # statfinr: Download Data From Statistics Finland
 
 <!-- badges: start -->
+
+[![R-CMD-check](https://github.com/osaal/statfinr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/osaal/statfinr/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 `statfinr` is a package for interfacing with the [Statistics
