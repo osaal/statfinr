@@ -1,12 +1,13 @@
 Package: statfinr
 Type: Package
-Title: What the Package Does (Title Case)
+Title: API Interface For Statistics Finland
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Author: Oliver Saal
+Maintainer: Oliver Saal <29450366+osaal@users.noreply.github.com>
+Description: Package for interfacing with the Statistics Finland API.
+    This package is a wrapper for the Statistics Finland PXWeb API.
+    It allows the user to explore the Statistics Finland databases from within R and request data in an R-friendly format.
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports: 
