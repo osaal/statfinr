@@ -11,9 +11,11 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports: 
+    cli,
     dplyr,
     httr2,
     rlang,
+    stringr,
     tibble
 URL: https://github.com/osaal/statfinr
 BugReports: https://github.com/osaal/statfinr/issues

@@ -7,7 +7,7 @@
 explore(db = NULL)
 }
 \arguments{
-\item{db}{The id of a specific database}
+\item{db}{The id of a specific database (optional)}
 }
 \value{
 A data frame containing the `id` and `name` of the databases
