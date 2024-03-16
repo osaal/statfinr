@@ -37,8 +37,8 @@ The \code{filter} argument can be one of five filter types:
 \item \code{top}: Return the \code{values} top-most data
 }
 
-The values to be filtered by are defined in the \code{values} argument. Note,
-that values \emph{must} be entered as character strings!
+The values to be filtered by are defined in the \code{values} argument. Values can
+be given as character or numeric vectors.
 
 The argument \code{format} defines in which format your results are returned.
 

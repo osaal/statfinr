@@ -1,6 +1,6 @@
 construct_json <- function(address, code, filter, values, format) {
   # Construct the response formatting
-  if (user_format %in% c("df", "json")) {
+  if (format %in% c("df", "json")) {
     response = list(
       format = "json-stat2"
     )
