@@ -10,14 +10,14 @@ explore(db = NULL)
 \item{db}{The id of a specific database (optional)}
 }
 \value{
-A data frame containing the `id` and `name` of the databases
+A data frame containing the \code{id} and \code{name} of the databases
 }
 \description{
-`explore` returns the IDs and names of StatFin databases
+\code{explore} returns the IDs and names of StatFin databases
 }
 \details{
-The function can be called without arguments or with the `db` argument.
+The function can be called without arguments or with the \code{db} argument.
 Without arguments, it returns the StatFin main databases. If supplied a
-specific database ID with the `db` argument, it returns the sub-databases
+specific database ID with the \code{db} argument, it returns the sub-databases
 for that database.
 }
