@@ -22,8 +22,8 @@
 #' - `all`: Similar to `item`, but used for wildcard selection with the `*` symbol
 #' - `top`: Return the `values` top-most data
 #'
-#' The values to be filtered by are defined in the `values` argument. Note,
-#' that values *must* be entered as character strings!
+#' The values to be filtered by are defined in the `values` argument. Values can
+#' be given as character or numeric vectors.
 #'
 #' The argument `format` defines in which format your results are returned.
 #'
@@ -35,11 +35,10 @@ get_data <- function(db = NULL, code = NULL, filter = NULL, values = NULL, forma
   # Retrieve function arguments as internal variables
   db <- db
   code <- code
-  filter <- match.arg(filter, c("item", "all", "top")) # Will this error here or when filter is called?
+  filter <- match.arg(filter, c("item", "all", "top")) # This errors once filter is evaluated!
   # TODO: Handle errors thrown by match.arg
   # TODO: Enforce only one filter verb, not multiple filters (not supported)
   values <- values
-  # TODO: Coerce values to strings (as the API always uses strings; or at least looks like that...)
   # NB: Perhaps coerce after having checked for nullness below?
   user_format <- format
   # TODO: Save the originally supplied format separately from the format given to httr2
@@ -48,23 +47,36 @@ get_data <- function(db = NULL, code = NULL, filter = NULL, values = NULL, forma
   if (is.null(db)) {
     cli::cli_abort(c(
       "{.var db} must be defined",
-      "i" = "You entered {db}",
+      "i" = "You entered nothing",
       "i" = "Enter the full ID of a database",
       "i" = "Use the explore() function to find the ID of your preferred database"
     ))
   }
 
+  # Get database metadata for processing later
+  metadata <- get_metadata(db)
+
+  # TODO: Build helper function to find database code based on user shortcode or search
+  # TODO: Handle multiple codes correctly, currently only functional with one!
   if (is.null(code)) {
     # Default to retrieving all codes
+    metadata |>
+      dplyr::select(code) |>
+      as.list()
   }
 
-  if (is.null(filter)) { filter = "item" } # THIS CANNOT EVALUATE RIGHT NOW BECAUSE OF MATCH.ARG IN THE START
+  if (is.null(filter)) { filter = "item" }
 
   if (is.null(values)) {
     # Retrieve all values
+    values <- sapply(code, get_values, metadata = metadata)
   }
 
-  if (is.null(user_format)) { user_format = "df" } # This only happens if the user explicitly supplies NULL
+  # The API only allows characters, so we coerce numeric values to characters
+  if (is.numeric(values)) { values <- as.character(values) }
+
+  # This only happens if the user explicitly supplies NULL, since default is "df"
+  if (is.null(user_format)) { user_format = "df" }
 
   # Construct the address
   address <- stringr::str_c(
@@ -72,47 +84,10 @@ get_data <- function(db = NULL, code = NULL, filter = NULL, values = NULL, forma
     db
   )
 
-  # Construct the selection rules for one code, using a list of values
-  selection <- list(
-    filter = filter,
-    values = values
-  )
-
-  # Construct the response formatting
-  if (user_format %in% c("df", "json")) {
-    response = list(
-      format = "json-stat2"
-    )
-  } else {
-    # TODO: Add other options than df or json
-    # Could be done with switch()?
-    cli::cli_abort(c(
-      "{.var format} must be either 'df' or 'json'",
-      "i" = "You entered {format}"
-    ))
-  }
-
-  # Construct the GET request in json-formatting
-  jsonget <- list(
-    query = list(list(
-      code = code,
-      selection = selection
-    )),
-    response = response
-  )
-
-  # code: Supplied by the user.
-  # TODO: Build helper function to find database code based on user shortcode or search
-  # TODO: Handle multiple codes correctly, currently only functional with one!
-  # filter: The way in which the user is searching. Can be "item", "all", "top", "agg", "vs" (last two uncertain!)
-  # values: The values that the user is retrieving data for. Depends on code and filter.
-
-  # Use user-submitted response format
-  # format: The format in which the response is returned. Defaults to data frame for user?
   # TODO: Integrate user-supplied format with StatFin-returned formats + R-friendly formats!
 
   # GET query from db
-  jsonresponse <- construct_json(address, jsonget)
+  jsonresponse <- construct_json(address, code, filter, values, format)
 
   # If user wants a data frame, construct one
   if (user_format == "df") {
