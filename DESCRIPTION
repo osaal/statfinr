@@ -1,7 +1,7 @@
 Package: statfinr
 Type: Package
 Title: API Interface For Statistics Finland
-Version: 0.1.0
+Version: 0.2.0
 Author: Oliver Saal
 Maintainer: Oliver Saal <29450366+osaal@users.noreply.github.com>
 Description: Package for interfacing with the Statistics Finland API.
